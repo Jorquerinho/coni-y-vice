@@ -1,53 +1,62 @@
 // ================================================
 // SERVICE WORKER — Vice & Coni 💕
-// Archivo: sw.js
-// Debe estar en la misma carpeta que index.html
+// Con soporte Firebase Cloud Messaging (FCM)
 // ================================================
 
-const CACHE_NAME = 'vyc-v1';
+importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js');
 
-// Instalación del SW
-self.addEventListener('install', event => {
-  self.skipWaiting();
+// ⚠️ Estos valores deben coincidir exactamente con los de index.html
+firebase.initializeApp({
+  apiKey: "AIzaSyAmvJLykvvzn1T53YQgRGYtnSlq1LqZX2Q",
+  authDomain: "appamorvicente.firebaseapp.com",
+  projectId: "appamorvicente",
+  storageBucket: "appamorvicente.firebasestorage.app",
+  messagingSenderId: "554827642467",
+  appId: "1:554827642467:web:8bd245e57b9c3f6f2aea56"
 });
 
-// Activación
-self.addEventListener('activate', event => {
-  event.waitUntil(clients.claim());
+const messaging = firebase.messaging();
+
+// ================================================
+// NOTIFICACIONES EN BACKGROUND (app cerrada/minimizada)
+// FCM llama a este handler cuando llega un mensaje
+// con el campo "data" (sin "notification")
+// ================================================
+messaging.onBackgroundMessage(payload => {
+  const { title, body, icon } = payload.notification || payload.data || {};
+
+  self.registration.showNotification(title || 'Vice & Coni 💕', {
+    body: body || '',
+    icon: icon || '/icon.png',
+    badge: '/icon.png',
+    vibrate: [200, 100, 200],
+    data: { url: payload.data?.url || '/' }
+  });
 });
 
-// Manejar notificaciones push (para el futuro si agregan servidor)
-self.addEventListener('push', event => {
-  if (!event.data) return;
-  
-  const data = event.data.json();
-  event.waitUntil(
-    self.registration.showNotification(data.title, {
-      body: data.body,
-      icon: data.icon || '/icon.png',
-      badge: data.badge || '/icon.png',
-      vibrate: [200, 100, 200],
-      data: { url: data.url || '/' }
-    })
-  );
-});
-
-// Al tocar la notificación, abrir/enfocar la app
+// ================================================
+// AL TOCAR LA NOTIFICACIÓN → abrir/enfocar la app
+// ================================================
 self.addEventListener('notificationclick', event => {
   event.notification.close();
-  
+
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
-      // Si la app ya está abierta, enfocarla
       for (const client of clientList) {
         if (client.url.includes(self.location.origin) && 'focus' in client) {
           return client.focus();
         }
       }
-      // Si no está abierta, abrirla
       if (clients.openWindow) {
-        return clients.openWindow('/');
+        return clients.openWindow(event.notification.data?.url || '/');
       }
     })
   );
 });
+
+// ================================================
+// INSTALL / ACTIVATE
+// ================================================
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', event => event.waitUntil(clients.claim()));
