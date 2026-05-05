@@ -2,15 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Vice & Coni">
-<meta name="theme-color" content="#F9EEF4">
-
-<!-- Icono para iPhone (emoji 💕 renderizado como imagen) -->
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23E8889A'/><text y='.92em' font-size='68' x='50%25' text-anchor='middle'>🤍</text></svg>">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23E8889A'/><text y='.92em' font-size='68' x='50%25' text-anchor='middle'>🤍</text></svg>">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vice & Coni 💕</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -38,16 +30,12 @@
 
   html { scroll-behavior: smooth; }
 
-  /* Respeta el notch / Dynamic Island del iPhone */
   body {
     font-family: 'DM Sans', sans-serif;
     background: #F9EEF4;
     min-height: 100vh;
-    min-height: -webkit-fill-available;
     overflow-x: hidden;
     color: var(--text);
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
   }
 
   /* FONDO ANIMADO */
@@ -714,6 +702,15 @@
       <div class="days-label">días juntos ♡</div>
     </div>
 
+    <!-- NOTIFICACIONES -->
+    <div class="card card-sm" id="notif-card" style="display:none;">
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">¿Quién eres? Activa las notificaciones para tu dispositivo 🔔</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary" style="flex:1;font-size:13px;padding:10px 8px;" onclick="window.activarNotif('Coni')">🌸 Soy Coni</button>
+        <button class="btn btn-primary" style="flex:1;font-size:13px;padding:10px 8px;background:linear-gradient(135deg,var(--mauve),var(--mid));" onclick="window.activarNotif('Vice')">💙 Soy Vice</button>
+      </div>
+    </div>
+
     <div class="card card-lg">
       <div class="section-title">✨ Estado emocional</div>
       <div id="emo-bars">
@@ -926,6 +923,7 @@ import {
   addDoc, setDoc, deleteDoc,
   onSnapshot, query, orderBy
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAmvJLykvvzn1T53YQgRGYtnSlq1LqZX2Q",
@@ -938,6 +936,71 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db  = getFirestore(app);
+
+// ================================================
+// FIREBASE MESSAGING (Push Notifications)
+// ⚠️ REEMPLAZA 'TU_CLAVE_VAPID_AQUI' con tu clave
+//    VAPID de Firebase Console →
+//    Project Settings → Cloud Messaging → Web Push certificates
+// ================================================
+const VAPID_KEY = 'BPQH3iOo6NrBC2vWwVFZbkB1KiIoIoUFUK-56kHWhEFJrJY288EVkZi9ARyiBv-z1AzlepBpVWKAeaJuT6TOK3U';
+
+async function iniciarNotificaciones(nombrePersona) {
+  try {
+    // Registrar el service worker
+    const swReg = await navigator.serviceWorker.register('/sw.js');
+
+    // Pedir permiso al usuario
+    const permiso = await Notification.requestPermission();
+    if (permiso !== 'granted') {
+      showToast('Notificaciones desactivadas 🔕');
+      return;
+    }
+
+    // Obtener token FCM del dispositivo
+    const messaging = getMessaging(app);
+    const token = await getToken(messaging, {
+      vapidKey: VAPID_KEY,
+      serviceWorkerRegistration: swReg
+    });
+
+    if (token) {
+      // Guardar token en Firestore para poder enviar notificaciones a esta persona
+      await setDoc(doc(db, 'tokens', nombrePersona), {
+        token,
+        persona: nombrePersona,
+        updatedAt: Date.now()
+      });
+      showToast('¡Notificaciones activadas! 🔔');
+      console.log('Token FCM guardado para', nombrePersona);
+    }
+
+    // Mostrar notificaciones cuando la app está en primer plano
+    onMessage(messaging, payload => {
+      const { title, body } = payload.notification || {};
+      showToast(`${title}: ${body}`);
+    });
+
+  } catch (err) {
+    console.error('Error al activar notificaciones:', err);
+    showToast('Error al activar notificaciones ❌');
+  }
+}
+
+// Registrar el SW al cargar (necesario aunque no se activen notificaciones aún)
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(console.error);
+}
+
+// Mostrar tarjeta de notificaciones si no está activada aún
+if ('Notification' in window && Notification.permission !== 'granted') {
+  document.getElementById('notif-card').style.display = 'block';
+}
+
+window.activarNotif = async function(persona) {
+  document.getElementById('notif-card').style.display = 'none';
+  await iniciarNotificaciones(persona);
+};
 
 // ================================================
 // ESTADO LOCAL (espejo de Firestore en memoria)
@@ -1359,121 +1422,6 @@ onSnapshot(collection(db,'canciones'), snap=>{
   });
   renderSongs();
 });
-
-// ================================================
-// NOTIFICACIONES
-// ================================================
-
-// VAPID key pública — generada para este proyecto
-// (en producción deberías generar las tuyas, pero esta funciona)
-const VAPID_PUBLIC_KEY = 'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBefkq1DWmIZe04dAjYAZl1E';
-
-async function initNotificaciones() {
-  // Solo funciona en HTTPS (GitHub Pages) o localhost
-  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-    console.log('Notificaciones no soportadas en este navegador/dispositivo');
-    return;
-  }
-
-  try {
-    // Registrar el service worker
-    const reg = await navigator.serviceWorker.register('./sw.js');
-    console.log('Service Worker registrado ✅');
-
-    // Pedir permiso al usuario
-    const permission = await Notification.requestPermission();
-    if (permission !== 'granted') {
-      console.log('Permiso de notificaciones denegado');
-      return;
-    }
-
-    console.log('Notificaciones activadas ✅');
-    showToast('Notificaciones activadas 🔔');
-
-  } catch(e) {
-    console.log('Error iniciando notificaciones:', e);
-  }
-}
-
-// Mostrar notificación local (no requiere servidor)
-function notificarLocal(titulo, cuerpo, icono = '🤍') {
-  if (Notification.permission !== 'granted') return;
-  
-  // Usamos el service worker para mostrar la notif (funciona con app cerrada)
-  navigator.serviceWorker.ready.then(reg => {
-    reg.showNotification(titulo, {
-      body: cuerpo,
-      icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23E8889A'/><text y='.92em' font-size='68' x='50%25' text-anchor='middle'>🤍</text></svg>",
-      badge: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23E8889A'/><text y='.92em' font-size='68' x='50%25' text-anchor='middle'>🤍</text></svg>",
-      vibrate: [200, 100, 200],
-      tag: 'vyc-notif', // evita duplicados
-      renotify: true
-    });
-  });
-}
-
-// ---- LISTENERS DE FIRESTORE CON NOTIFICACIONES ----
-// Los listeners normales ya existen arriba.
-// Acá agregamos la lógica de notificación cuando llegan cambios.
-
-let primerasCargasListas = { notas: false, eventos: false, canciones: false };
-
-// Guardamos los IDs que ya conocemos para detectar elementos NUEVOS
-const idsConocidos = { notas: new Set(), eventos: new Set(), canciones: new Set() };
-
-// Interceptar snapshots para notificar cambios nuevos
-function procesarSnapshotConNotif(snap, coleccion) {
-  const esPrimera = !primerasCargasListas[coleccion];
-  
-  snap.docChanges().forEach(change => {
-    if (change.type === 'added' && !esPrimera) {
-      // Es un documento NUEVO (no la carga inicial)
-      const data = change.doc.data();
-      
-      if (coleccion === 'notas') {
-        notificarLocal(
-          `Nueva nota de ${data.usuario} ${data.usuario === 'Coni' ? '🌸' : '💙'}`,
-          `${data.sentimiento} — "${data.texto.slice(0, 60)}${data.texto.length > 60 ? '...' : ''}"`
-        );
-      }
-      
-      if (coleccion === 'eventos') {
-        notificarLocal(
-          `Nuevo evento agendado 📅`,
-          `${data.titulo} — ${data.fecha} a las ${data.hora}`
-        );
-      }
-      
-      if (coleccion === 'canciones') {
-        const persona = change.doc.id;
-        notificarLocal(
-          `${persona} cambió su canción 🎵`,
-          `${data.titulo}${data.artista ? ' · ' + data.artista : ''}`
-        );
-      }
-    }
-  });
-  
-  primerasCargasListas[coleccion] = true;
-}
-
-// Reemplazar los listeners simples con versión que notifica
-// (se llama DESPUÉS de que los listeners originales ya están definidos)
-onSnapshot(query(collection(db,'notas'), orderBy('timestamp','desc')), snap => {
-  procesarSnapshotConNotif(snap, 'notas');
-});
-
-onSnapshot(query(collection(db,'eventos'), orderBy('timestamp','asc')), snap => {
-  procesarSnapshotConNotif(snap, 'eventos');
-});
-
-onSnapshot(collection(db,'canciones'), snap => {
-  procesarSnapshotConNotif(snap, 'canciones');
-});
-
-// Iniciar notificaciones cuando carga la app
-// Pequeño delay para que el usuario vea la app primero
-setTimeout(() => initNotificaciones(), 2500);
 
 // ================================================
 // INIT
