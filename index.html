@@ -1,680 +1,694 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Vice & Coni">
+<meta name="theme-color" content="#F9EEF4">
+
+<!-- Icono para iPhone (emoji 💕 renderizado como imagen) -->
+
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23E8889A'/><text y='.92em' font-size='68' x='50%25' text-anchor='middle'>🤍</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23E8889A'/><text y='.92em' font-size='68' x='50%25' text-anchor='middle'>🤍</text></svg>">
 <title>Vice & Coni 💕</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --rose: #E8889A;
-    --rose-light: #F5C6CF;
-    --rose-pale: #FDF0F2;
-    --mauve: #9B7FA6;
-    --mauve-light: #D4BFDC;
-    --gold: #C9A96E;
-    --gold-light: #F0DEB8;
-    --cream: #FBF7F4;
-    --dark: #2C1A2E;
-    --mid: #6B4A6E;
-    --text: #3D2640;
-    --text-muted: #9A7D9D;
-    --white: #FFFFFF;
-    --glass: rgba(255,255,255,0.65);
-    --glass-border: rgba(255,255,255,0.85);
-    --shadow: 0 8px 32px rgba(155,127,166,0.18);
-    --shadow-lg: 0 20px 60px rgba(44,26,46,0.15);
-  }
+:root {
+–rose: #E8889A;
+–rose-light: #F5C6CF;
+–rose-pale: #FDF0F2;
+–mauve: #9B7FA6;
+–mauve-light: #D4BFDC;
+–gold: #C9A96E;
+–gold-light: #F0DEB8;
+–cream: #FBF7F4;
+–dark: #2C1A2E;
+–mid: #6B4A6E;
+–text: #3D2640;
+–text-muted: #9A7D9D;
+–white: #FFFFFF;
+–glass: rgba(255,255,255,0.65);
+–glass-border: rgba(255,255,255,0.85);
+–shadow: 0 8px 32px rgba(155,127,166,0.18);
+–shadow-lg: 0 20px 60px rgba(44,26,46,0.15);
+}
 
-  html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: #F9EEF4;
-    min-height: 100vh;
-    overflow-x: hidden;
-    color: var(--text);
-  }
+/* Respeta el notch / Dynamic Island del iPhone */
+body {
+font-family: ‘DM Sans’, sans-serif;
+background: #F9EEF4;
+min-height: 100vh;
+min-height: -webkit-fill-available;
+overflow-x: hidden;
+color: var(–text);
+padding-top: env(safe-area-inset-top);
+padding-bottom: env(safe-area-inset-bottom);
+}
 
-  /* FONDO ANIMADO */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(232,136,154,0.22) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 80% at 80% 80%, rgba(155,127,166,0.2) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 50% at 50% 50%, rgba(201,169,110,0.08) 0%, transparent 70%),
-      linear-gradient(160deg, #FDF0F2 0%, #F3EAF8 40%, #EEE9F5 70%, #FBF7F4 100%);
-    z-index: 0;
-    pointer-events: none;
-  }
+/* FONDO ANIMADO */
+body::before {
+content: ‘’;
+position: fixed;
+inset: 0;
+background:
+radial-gradient(ellipse 80% 60% at 20% 10%, rgba(232,136,154,0.22) 0%, transparent 60%),
+radial-gradient(ellipse 60% 80% at 80% 80%, rgba(155,127,166,0.2) 0%, transparent 60%),
+radial-gradient(ellipse 50% 50% at 50% 50%, rgba(201,169,110,0.08) 0%, transparent 70%),
+linear-gradient(160deg, #FDF0F2 0%, #F3EAF8 40%, #EEE9F5 70%, #FBF7F4 100%);
+z-index: 0;
+pointer-events: none;
+}
 
-  /* PARTÍCULAS FLOTANTES */
-  .particles {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    overflow: hidden;
-  }
-  .particle {
-    position: absolute;
-    font-size: 16px;
-    opacity: 0;
-    animation: floatUp linear infinite;
-  }
-  @keyframes floatUp {
-    0% { opacity: 0; transform: translateY(100vh) rotate(0deg) scale(0.5); }
-    10% { opacity: 0.6; }
-    90% { opacity: 0.3; }
-    100% { opacity: 0; transform: translateY(-20vh) rotate(360deg) scale(1.2); }
-  }
+/* PARTÍCULAS FLOTANTES */
+.particles {
+position: fixed;
+inset: 0;
+pointer-events: none;
+z-index: 0;
+overflow: hidden;
+}
+.particle {
+position: absolute;
+font-size: 16px;
+opacity: 0;
+animation: floatUp linear infinite;
+}
+@keyframes floatUp {
+0% { opacity: 0; transform: translateY(100vh) rotate(0deg) scale(0.5); }
+10% { opacity: 0.6; }
+90% { opacity: 0.3; }
+100% { opacity: 0; transform: translateY(-20vh) rotate(360deg) scale(1.2); }
+}
 
-  /* LAYOUT PRINCIPAL */
-  .app {
-    position: relative;
-    z-index: 1;
-    max-width: 420px;
-    margin: 0 auto;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    padding: 0 0 100px;
-  }
+/* LAYOUT PRINCIPAL */
+.app {
+position: relative;
+z-index: 1;
+max-width: 420px;
+margin: 0 auto;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+padding: 0 0 100px;
+}
 
-  /* NAV INFERIOR */
-  .nav {
-    position: fixed;
-    bottom: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-    background: rgba(255,255,255,0.88);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-    border-radius: 30px;
-    padding: 10px 20px;
-    display: flex;
-    gap: 6px;
-    box-shadow: 0 8px 40px rgba(155,127,166,0.25), 0 2px 8px rgba(0,0,0,0.06);
-  }
-  .nav-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    padding: 10px 18px;
-    border: none;
-    background: transparent;
-    border-radius: 22px;
-    cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-    color: var(--text-muted);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-    min-width: 64px;
-  }
-  .nav-btn span.icon { font-size: 20px; line-height: 1; }
-  .nav-btn:hover { color: var(--mauve); transform: translateY(-2px); }
-  .nav-btn.active {
-    background: linear-gradient(135deg, var(--rose-light), var(--mauve-light));
-    color: var(--dark);
-    transform: translateY(-4px);
-    box-shadow: 0 4px 16px rgba(232,136,154,0.3);
-  }
+/* NAV INFERIOR */
+.nav {
+position: fixed;
+bottom: 16px;
+left: 50%;
+transform: translateX(-50%);
+z-index: 100;
+background: rgba(255,255,255,0.88);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+border: 1px solid var(–glass-border);
+border-radius: 30px;
+padding: 10px 20px;
+display: flex;
+gap: 6px;
+box-shadow: 0 8px 40px rgba(155,127,166,0.25), 0 2px 8px rgba(0,0,0,0.06);
+}
+.nav-btn {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 3px;
+padding: 10px 18px;
+border: none;
+background: transparent;
+border-radius: 22px;
+cursor: pointer;
+transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+color: var(–text-muted);
+font-family: ‘DM Sans’, sans-serif;
+font-size: 10px;
+font-weight: 500;
+letter-spacing: 0.3px;
+min-width: 64px;
+}
+.nav-btn span.icon { font-size: 20px; line-height: 1; }
+.nav-btn:hover { color: var(–mauve); transform: translateY(-2px); }
+.nav-btn.active {
+background: linear-gradient(135deg, var(–rose-light), var(–mauve-light));
+color: var(–dark);
+transform: translateY(-4px);
+box-shadow: 0 4px 16px rgba(232,136,154,0.3);
+}
 
-  /* PÁGINAS */
-  .page { display: none; padding: 24px 20px; animation: fadeIn 0.4s ease; }
-  .page.active { display: block; }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+/* PÁGINAS */
+.page { display: none; padding: 24px 20px; animation: fadeIn 0.4s ease; }
+.page.active { display: block; }
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(12px); }
+to { opacity: 1; transform: translateY(0); }
+}
 
-  /* GLASS CARD */
-  .card {
-    background: var(--glass);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border);
-    border-radius: 24px;
-    padding: 20px;
-    box-shadow: var(--shadow);
-    margin-bottom: 16px;
-  }
-  .card-lg { border-radius: 28px; padding: 24px; }
-  .card-sm { border-radius: 18px; padding: 14px 16px; }
+/* GLASS CARD */
+.card {
+background: var(–glass);
+backdrop-filter: blur(16px);
+-webkit-backdrop-filter: blur(16px);
+border: 1px solid var(–glass-border);
+border-radius: 24px;
+padding: 20px;
+box-shadow: var(–shadow);
+margin-bottom: 16px;
+}
+.card-lg { border-radius: 28px; padding: 24px; }
+.card-sm { border-radius: 18px; padding: 14px 16px; }
 
-  /* TIPOGRAFÍA */
-  .title-serif {
-    font-family: 'Playfair Display', serif;
-    color: var(--dark);
-  }
-  .label {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-  }
+/* TIPOGRAFÍA */
+.title-serif {
+font-family: ‘Playfair Display’, serif;
+color: var(–dark);
+}
+.label {
+font-size: 11px;
+font-weight: 500;
+letter-spacing: 1.2px;
+text-transform: uppercase;
+color: var(–text-muted);
+}
 
-  /* BOTONES */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px 24px;
-    border-radius: 50px;
-    border: none;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
-    font-size: 14px;
-    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  .btn:active { transform: scale(0.96); }
-  .btn-primary {
-    background: linear-gradient(135deg, var(--rose), var(--mauve));
-    color: white;
-    box-shadow: 0 6px 20px rgba(232,136,154,0.35);
-    width: 100%;
-  }
-  .btn-primary:hover { box-shadow: 0 10px 30px rgba(232,136,154,0.45); transform: translateY(-2px); }
-  .btn-ghost {
-    background: rgba(255,255,255,0.6);
-    border: 1px solid var(--glass-border);
-    color: var(--mid);
-  }
-  .btn-ghost:hover { background: white; }
-  .btn-danger {
-    background: rgba(232,136,154,0.12);
-    color: var(--rose);
-    border: 1px solid rgba(232,136,154,0.3);
-    padding: 6px 12px;
-    font-size: 12px;
-    border-radius: 12px;
-  }
+/* BOTONES */
+.btn {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+padding: 12px 24px;
+border-radius: 50px;
+border: none;
+cursor: pointer;
+font-family: ‘DM Sans’, sans-serif;
+font-weight: 500;
+font-size: 14px;
+transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.btn:active { transform: scale(0.96); }
+.btn-primary {
+background: linear-gradient(135deg, var(–rose), var(–mauve));
+color: white;
+box-shadow: 0 6px 20px rgba(232,136,154,0.35);
+width: 100%;
+}
+.btn-primary:hover { box-shadow: 0 10px 30px rgba(232,136,154,0.45); transform: translateY(-2px); }
+.btn-ghost {
+background: rgba(255,255,255,0.6);
+border: 1px solid var(–glass-border);
+color: var(–mid);
+}
+.btn-ghost:hover { background: white; }
+.btn-danger {
+background: rgba(232,136,154,0.12);
+color: var(–rose);
+border: 1px solid rgba(232,136,154,0.3);
+padding: 6px 12px;
+font-size: 12px;
+border-radius: 12px;
+}
 
-  /* INPUTS */
-  .input-wrap { margin-bottom: 14px; }
-  .input-wrap label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.3px; }
-  .inp {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1.5px solid rgba(155,127,166,0.2);
-    border-radius: 14px;
-    background: rgba(255,255,255,0.7);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    color: var(--text);
-    outline: none;
-    transition: all 0.2s;
-  }
-  .inp:focus { border-color: var(--rose); background: white; box-shadow: 0 0 0 4px rgba(232,136,154,0.1); }
-  textarea.inp { resize: vertical; min-height: 80px; }
-  select.inp { cursor: pointer; }
+/* INPUTS */
+.input-wrap { margin-bottom: 14px; }
+.input-wrap label { display: block; font-size: 12px; font-weight: 500; color: var(–text-muted); margin-bottom: 6px; letter-spacing: 0.3px; }
+.inp {
+width: 100%;
+padding: 12px 16px;
+border: 1.5px solid rgba(155,127,166,0.2);
+border-radius: 14px;
+background: rgba(255,255,255,0.7);
+font-family: ‘DM Sans’, sans-serif;
+font-size: 14px;
+color: var(–text);
+outline: none;
+transition: all 0.2s;
+}
+.inp:focus { border-color: var(–rose); background: white; box-shadow: 0 0 0 4px rgba(232,136,154,0.1); }
+textarea.inp { resize: vertical; min-height: 80px; }
+select.inp { cursor: pointer; }
 
-  /* DIVIDER */
-  .divider {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 20px 0;
-    color: var(--text-muted);
-    font-size: 12px;
-  }
-  .divider::before, .divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(155,127,166,0.25), transparent);
-  }
+/* DIVIDER */
+.divider {
+display: flex;
+align-items: center;
+gap: 12px;
+margin: 20px 0;
+color: var(–text-muted);
+font-size: 12px;
+}
+.divider::before, .divider::after {
+content: ‘’;
+flex: 1;
+height: 1px;
+background: linear-gradient(90deg, transparent, rgba(155,127,166,0.25), transparent);
+}
 
-  /* BADGE */
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 12px;
-    border-radius: 50px;
-    font-size: 11px;
-    font-weight: 500;
-  }
-  .badge-rose { background: rgba(232,136,154,0.15); color: var(--rose); }
-  .badge-mauve { background: rgba(155,127,166,0.15); color: var(--mauve); }
-  .badge-gold { background: rgba(201,169,110,0.15); color: var(--gold); }
+/* BADGE */
+.badge {
+display: inline-flex;
+align-items: center;
+padding: 4px 12px;
+border-radius: 50px;
+font-size: 11px;
+font-weight: 500;
+}
+.badge-rose { background: rgba(232,136,154,0.15); color: var(–rose); }
+.badge-mauve { background: rgba(155,127,166,0.15); color: var(–mauve); }
+.badge-gold { background: rgba(201,169,110,0.15); color: var(–gold); }
 
-  /* ===== PÁGINA INICIO ===== */
-  .hero {
-    text-align: center;
-    padding: 32px 0 16px;
-    position: relative;
-  }
-  .hero-title {
-    font-size: 34px;
-    font-weight: 600;
-    line-height: 1.2;
-    margin-bottom: 6px;
-    background: linear-gradient(135deg, var(--rose), var(--mauve));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .hero-subtitle { font-size: 13px; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; }
+/* ===== PÁGINA INICIO ===== */
+.hero {
+text-align: center;
+padding: 32px 0 16px;
+position: relative;
+}
+.hero-title {
+font-size: 34px;
+font-weight: 600;
+line-height: 1.2;
+margin-bottom: 6px;
+background: linear-gradient(135deg, var(–rose), var(–mauve));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+.hero-subtitle { font-size: 13px; color: var(–text-muted); letter-spacing: 1.5px; text-transform: uppercase; }
 
-  .days-counter {
-    text-align: center;
-    padding: 28px;
-    background: linear-gradient(135deg, rgba(232,136,154,0.12), rgba(155,127,166,0.12));
-    border: 1px solid rgba(232,136,154,0.2);
-    border-radius: 28px;
-    margin: 16px 0;
-    position: relative;
-    overflow: hidden;
-  }
-  .days-counter::before {
-    content: '♡';
-    position: absolute;
-    font-size: 180px;
-    opacity: 0.04;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-  }
-  .days-number {
-    font-family: 'Playfair Display', serif;
-    font-size: 80px;
-    font-weight: 600;
-    line-height: 1;
-    background: linear-gradient(135deg, var(--rose), var(--mauve));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .days-label { font-size: 13px; color: var(--text-muted); margin-top: 8px; letter-spacing: 0.5px; }
+.days-counter {
+text-align: center;
+padding: 28px;
+background: linear-gradient(135deg, rgba(232,136,154,0.12), rgba(155,127,166,0.12));
+border: 1px solid rgba(232,136,154,0.2);
+border-radius: 28px;
+margin: 16px 0;
+position: relative;
+overflow: hidden;
+}
+.days-counter::before {
+content: ‘♡’;
+position: absolute;
+font-size: 180px;
+opacity: 0.04;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+pointer-events: none;
+}
+.days-number {
+font-family: ‘Playfair Display’, serif;
+font-size: 80px;
+font-weight: 600;
+line-height: 1;
+background: linear-gradient(135deg, var(–rose), var(–mauve));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+.days-label { font-size: 13px; color: var(–text-muted); margin-top: 8px; letter-spacing: 0.5px; }
 
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    color: var(--dark);
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+.section-title {
+font-family: ‘Playfair Display’, serif;
+font-size: 18px;
+color: var(–dark);
+margin-bottom: 14px;
+display: flex;
+align-items: center;
+gap: 8px;
+}
 
-  .emo-bar { margin-bottom: 10px; }
-  .emo-bar-header { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; color: var(--text); }
-  .emo-bar-track { height: 6px; background: rgba(155,127,166,0.12); border-radius: 99px; overflow: hidden; }
-  .emo-bar-fill { height: 100%; border-radius: 99px; transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.emo-bar { margin-bottom: 10px; }
+.emo-bar-header { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; color: var(–text); }
+.emo-bar-track { height: 6px; background: rgba(155,127,166,0.12); border-radius: 99px; overflow: hidden; }
+.emo-bar-fill { height: 100%; border-radius: 99px; transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
 
-  .user-status { display: flex; gap: 12px; margin-top: 14px; }
-  .user-pill {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
-    background: rgba(255,255,255,0.7);
-    border: 1px solid var(--glass-border);
-    border-radius: 18px;
-  }
-  .avatar {
-    width: 38px; height: 38px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
-  }
-  .avatar-rose { background: linear-gradient(135deg, #F5C6CF, #E8889A); }
-  .avatar-mauve { background: linear-gradient(135deg, #D4BFDC, #9B7FA6); }
-  .user-info .name { font-size: 12px; font-weight: 500; color: var(--text); }
-  .user-info .emo { font-size: 11px; color: var(--text-muted); }
+.user-status { display: flex; gap: 12px; margin-top: 14px; }
+.user-pill {
+flex: 1;
+display: flex;
+align-items: center;
+gap: 10px;
+padding: 12px 16px;
+background: rgba(255,255,255,0.7);
+border: 1px solid var(–glass-border);
+border-radius: 18px;
+}
+.avatar {
+width: 38px; height: 38px;
+border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+font-size: 16px;
+flex-shrink: 0;
+}
+.avatar-rose { background: linear-gradient(135deg, #F5C6CF, #E8889A); }
+.avatar-mauve { background: linear-gradient(135deg, #D4BFDC, #9B7FA6); }
+.user-info .name { font-size: 12px; font-weight: 500; color: var(–text); }
+.user-info .emo { font-size: 11px; color: var(–text-muted); }
 
-  .rec-card {
-    background: linear-gradient(135deg, rgba(201,169,110,0.1), rgba(232,136,154,0.08));
-    border: 1px solid rgba(201,169,110,0.25);
-    border-radius: 20px;
-    padding: 18px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .rec-icon { font-size: 36px; }
-  .rec-info .rec-label { font-size: 11px; color: var(--gold); font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; }
-  .rec-info .rec-title { font-size: 16px; font-weight: 500; color: var(--dark); margin-top: 2px; }
+.rec-card {
+background: linear-gradient(135deg, rgba(201,169,110,0.1), rgba(232,136,154,0.08));
+border: 1px solid rgba(201,169,110,0.25);
+border-radius: 20px;
+padding: 18px;
+display: flex;
+align-items: center;
+gap: 14px;
+}
+.rec-icon { font-size: 36px; }
+.rec-info .rec-label { font-size: 11px; color: var(–gold); font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; }
+.rec-info .rec-title { font-size: 16px; font-weight: 500; color: var(–dark); margin-top: 2px; }
 
-  /* ===== CALENDARIO ===== */
-  .cal-header { text-align: center; margin-bottom: 20px; }
-  .cal-month { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--dark); }
-  .cal-year { font-size: 13px; color: var(--text-muted); }
+/* ===== CALENDARIO ===== */
+.cal-header { text-align: center; margin-bottom: 20px; }
+.cal-month { font-family: ‘Playfair Display’, serif; font-size: 22px; color: var(–dark); }
+.cal-year { font-size: 13px; color: var(–text-muted); }
 
-  .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 3px; margin-bottom: 20px; }
-  .cal-dow {
-    text-align: center;
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-    color: var(--text-muted);
-    padding: 4px 0 6px;
-    text-transform: uppercase;
-  }
-  .cal-day {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 400;
-    color: var(--text);
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-    gap: 2px;
-    height: 40px;
-    min-width: 0;
-    overflow: hidden;
-  }
-  .cal-day:hover { background: rgba(232,136,154,0.1); }
-  .cal-day.today {
-    background: linear-gradient(135deg, var(--rose), var(--mauve));
-    color: white;
-    font-weight: 600;
-    box-shadow: 0 4px 14px rgba(232,136,154,0.4);
-  }
-  .cal-day.has-event::after {
-    content: '';
-    width: 4px; height: 4px;
-    border-radius: 50%;
-    background: var(--gold);
-    display: block;
-  }
-  .cal-day.selected { background: rgba(232,136,154,0.15); border: 1.5px solid var(--rose-light); }
-  .cal-day.empty { pointer-events: none; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 3px; margin-bottom: 20px; }
+.cal-dow {
+text-align: center;
+font-size: 9px;
+font-weight: 600;
+letter-spacing: 0.3px;
+color: var(–text-muted);
+padding: 4px 0 6px;
+text-transform: uppercase;
+}
+.cal-day {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+border-radius: 10px;
+font-size: 13px;
+font-weight: 400;
+color: var(–text);
+cursor: pointer;
+transition: all 0.2s;
+position: relative;
+gap: 2px;
+height: 40px;
+min-width: 0;
+overflow: hidden;
+}
+.cal-day:hover { background: rgba(232,136,154,0.1); }
+.cal-day.today {
+background: linear-gradient(135deg, var(–rose), var(–mauve));
+color: white;
+font-weight: 600;
+box-shadow: 0 4px 14px rgba(232,136,154,0.4);
+}
+.cal-day.has-event::after {
+content: ‘’;
+width: 4px; height: 4px;
+border-radius: 50%;
+background: var(–gold);
+display: block;
+}
+.cal-day.selected { background: rgba(232,136,154,0.15); border: 1.5px solid var(–rose-light); }
+.cal-day.empty { pointer-events: none; }
 
-  .event-detail {
-    padding: 14px 16px;
-    border-radius: 18px;
-    margin-bottom: 10px;
-    border: 1px solid transparent;
-    position: relative;
-  }
-  .event-detail.coni { background: rgba(232,136,154,0.08); border-color: rgba(232,136,154,0.2); }
-  .event-detail.vice { background: rgba(155,127,166,0.08); border-color: rgba(155,127,166,0.2); }
-  .event-name { font-size: 15px; font-weight: 500; color: var(--dark); margin-bottom: 4px; }
-  .event-meta { font-size: 12px; color: var(--text-muted); display: flex; gap: 12px; flex-wrap: wrap; }
-  .event-del { position: absolute; top: 12px; right: 12px; }
+.event-detail {
+padding: 14px 16px;
+border-radius: 18px;
+margin-bottom: 10px;
+border: 1px solid transparent;
+position: relative;
+}
+.event-detail.coni { background: rgba(232,136,154,0.08); border-color: rgba(232,136,154,0.2); }
+.event-detail.vice { background: rgba(155,127,166,0.08); border-color: rgba(155,127,166,0.2); }
+.event-name { font-size: 15px; font-weight: 500; color: var(–dark); margin-bottom: 4px; }
+.event-meta { font-size: 12px; color: var(–text-muted); display: flex; gap: 12px; flex-wrap: wrap; }
+.event-del { position: absolute; top: 12px; right: 12px; }
 
-  .form-toggle {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--mauve);
-    cursor: pointer;
-    padding: 12px 0;
-    border: none;
-    background: none;
-    font-family: 'DM Sans', sans-serif;
-  }
-  .form-toggle .chevron { transition: transform 0.3s; display: inline-block; }
-  .form-toggle.open .chevron { transform: rotate(180deg); }
-  .form-panel { overflow: hidden; transition: max-height 0.4s ease; max-height: 0; }
-  .form-panel.open { max-height: 600px; }
+.form-toggle {
+display: flex;
+align-items: center;
+gap: 10px;
+font-size: 14px;
+font-weight: 500;
+color: var(–mauve);
+cursor: pointer;
+padding: 12px 0;
+border: none;
+background: none;
+font-family: ‘DM Sans’, sans-serif;
+}
+.form-toggle .chevron { transition: transform 0.3s; display: inline-block; }
+.form-toggle.open .chevron { transform: rotate(180deg); }
+.form-panel { overflow: hidden; transition: max-height 0.4s ease; max-height: 0; }
+.form-panel.open { max-height: 600px; }
 
-  /* ===== PLANES ===== */
-  .ruleta-btn {
-    background: linear-gradient(135deg, var(--gold), #B8935A);
-    color: white;
-    box-shadow: 0 6px 20px rgba(201,169,110,0.4);
-    width: 100%;
-    font-size: 15px;
-    padding: 14px;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  .ruleta-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(201,169,110,0.5); }
+/* ===== PLANES ===== */
+.ruleta-btn {
+background: linear-gradient(135deg, var(–gold), #B8935A);
+color: white;
+box-shadow: 0 6px 20px rgba(201,169,110,0.4);
+width: 100%;
+font-size: 15px;
+padding: 14px;
+transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.ruleta-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(201,169,110,0.5); }
 
-  .plan-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 13px 16px;
-    background: rgba(255,255,255,0.65);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    margin-bottom: 8px;
-    transition: all 0.2s;
-  }
-  .plan-item:hover { background: white; box-shadow: 0 4px 16px rgba(155,127,166,0.1); }
-  .plan-type { font-size: 18px; flex-shrink: 0; }
-  .plan-name { flex: 1; font-size: 14px; color: var(--text); font-weight: 400; }
-  .plan-del { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 16px; padding: 4px; transition: color 0.2s; }
-  .plan-del:hover { color: var(--rose); }
+.plan-item {
+display: flex;
+align-items: center;
+gap: 12px;
+padding: 13px 16px;
+background: rgba(255,255,255,0.65);
+border: 1px solid var(–glass-border);
+border-radius: 16px;
+margin-bottom: 8px;
+transition: all 0.2s;
+}
+.plan-item:hover { background: white; box-shadow: 0 4px 16px rgba(155,127,166,0.1); }
+.plan-type { font-size: 18px; flex-shrink: 0; }
+.plan-name { flex: 1; font-size: 14px; color: var(–text); font-weight: 400; }
+.plan-del { background: none; border: none; cursor: pointer; color: var(–text-muted); font-size: 16px; padding: 4px; transition: color 0.2s; }
+.plan-del:hover { color: var(–rose); }
 
-  .filter-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-  .filter-chip {
-    padding: 7px 16px;
-    border-radius: 50px;
-    border: 1.5px solid rgba(155,127,166,0.2);
-    background: rgba(255,255,255,0.6);
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'DM Sans', sans-serif;
-  }
-  .filter-chip:hover, .filter-chip.active {
-    background: linear-gradient(135deg, rgba(232,136,154,0.15), rgba(155,127,166,0.15));
-    border-color: var(--rose-light);
-    color: var(--dark);
-  }
+.filter-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.filter-chip {
+padding: 7px 16px;
+border-radius: 50px;
+border: 1.5px solid rgba(155,127,166,0.2);
+background: rgba(255,255,255,0.6);
+font-size: 12px;
+font-weight: 500;
+color: var(–text-muted);
+cursor: pointer;
+transition: all 0.2s;
+font-family: ‘DM Sans’, sans-serif;
+}
+.filter-chip:hover, .filter-chip.active {
+background: linear-gradient(135deg, rgba(232,136,154,0.15), rgba(155,127,166,0.15));
+border-color: var(–rose-light);
+color: var(–dark);
+}
 
-  /* ===== DIARIO ===== */
-  .nota-card {
-    background: rgba(255,255,255,0.75);
-    border: 1px solid var(--glass-border);
-    border-radius: 22px;
-    padding: 18px;
-    margin-bottom: 12px;
-    transition: all 0.2s;
-    position: relative;
-  }
-  .nota-card:hover { background: white; box-shadow: 0 6px 24px rgba(155,127,166,0.12); }
-  .nota-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-  .nota-user { font-size: 13px; font-weight: 600; color: var(--dark); }
-  .nota-date { font-size: 11px; color: var(--text-muted); margin-left: auto; }
-  .nota-text { font-size: 14px; color: var(--text); line-height: 1.65; }
-  .nota-del { position: absolute; bottom: 14px; right: 14px; }
+/* ===== DIARIO ===== */
+.nota-card {
+background: rgba(255,255,255,0.75);
+border: 1px solid var(–glass-border);
+border-radius: 22px;
+padding: 18px;
+margin-bottom: 12px;
+transition: all 0.2s;
+position: relative;
+}
+.nota-card:hover { background: white; box-shadow: 0 6px 24px rgba(155,127,166,0.12); }
+.nota-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.nota-user { font-size: 13px; font-weight: 600; color: var(–dark); }
+.nota-date { font-size: 11px; color: var(–text-muted); margin-left: auto; }
+.nota-text { font-size: 14px; color: var(–text); line-height: 1.65; }
+.nota-del { position: absolute; bottom: 14px; right: 14px; }
 
-  /* TOAST */
-  .toast {
-    position: fixed;
-    bottom: 100px;
-    left: 50%;
-    transform: translateX(-50%) translateY(10px);
-    background: var(--dark);
-    color: white;
-    padding: 12px 20px;
-    border-radius: 50px;
-    font-size: 13px;
-    z-index: 200;
-    opacity: 0;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    pointer-events: none;
-    white-space: nowrap;
-  }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+/* TOAST */
+.toast {
+position: fixed;
+bottom: 100px;
+left: 50%;
+transform: translateX(-50%) translateY(10px);
+background: var(–dark);
+color: white;
+padding: 12px 20px;
+border-radius: 50px;
+font-size: 13px;
+z-index: 200;
+opacity: 0;
+transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+pointer-events: none;
+white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  /* RESULTADO RULETA */
-  .ruleta-result {
-    display: none;
-    text-align: center;
-    padding: 20px;
-    background: linear-gradient(135deg, rgba(201,169,110,0.12), rgba(232,136,154,0.08));
-    border: 1px solid rgba(201,169,110,0.3);
-    border-radius: 20px;
-    margin-top: 14px;
-    animation: fadeIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  .ruleta-result.show { display: block; }
-  .ruleta-result .tipo { font-size: 32px; }
-  .ruleta-result .nombre { font-size: 18px; font-weight: 600; color: var(--dark); margin-top: 6px; }
+/* RESULTADO RULETA */
+.ruleta-result {
+display: none;
+text-align: center;
+padding: 20px;
+background: linear-gradient(135deg, rgba(201,169,110,0.12), rgba(232,136,154,0.08));
+border: 1px solid rgba(201,169,110,0.3);
+border-radius: 20px;
+margin-top: 14px;
+animation: fadeIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.ruleta-result.show { display: block; }
+.ruleta-result .tipo { font-size: 32px; }
+.ruleta-result .nombre { font-size: 18px; font-weight: 600; color: var(–dark); margin-top: 6px; }
 
-  /* SELECTOR PERSONAS */
-  .persona-select { display: flex; gap: 8px; }
-  .persona-btn {
-    flex: 1; padding: 10px; border-radius: 14px;
-    border: 1.5px solid rgba(155,127,166,0.2);
-    background: rgba(255,255,255,0.6);
-    cursor: pointer; font-family: 'DM Sans', sans-serif;
-    font-size: 13px; font-weight: 500; color: var(--text-muted);
-    transition: all 0.2s;
-  }
-  .persona-btn.active-coni { background: rgba(232,136,154,0.15); border-color: var(--rose); color: var(--rose); }
-  .persona-btn.active-vice { background: rgba(155,127,166,0.15); border-color: var(--mauve); color: var(--mauve); }
+/* SELECTOR PERSONAS */
+.persona-select { display: flex; gap: 8px; }
+.persona-btn {
+flex: 1; padding: 10px; border-radius: 14px;
+border: 1.5px solid rgba(155,127,166,0.2);
+background: rgba(255,255,255,0.6);
+cursor: pointer; font-family: ‘DM Sans’, sans-serif;
+font-size: 13px; font-weight: 500; color: var(–text-muted);
+transition: all 0.2s;
+}
+.persona-btn.active-coni { background: rgba(232,136,154,0.15); border-color: var(–rose); color: var(–rose); }
+.persona-btn.active-vice { background: rgba(155,127,166,0.15); border-color: var(–mauve); color: var(–mauve); }
 
-  /* EMO SELECT */
-  .emo-select { display: flex; gap: 8px; flex-wrap: wrap; }
-  .emo-btn {
-    flex: 1; min-width: 70px; padding: 10px 8px; border-radius: 14px;
-    border: 1.5px solid rgba(155,127,166,0.15);
-    background: rgba(255,255,255,0.6);
-    cursor: pointer; font-family: 'DM Sans', sans-serif;
-    font-size: 12px; text-align: center; color: var(--text-muted);
-    transition: all 0.2s;
-  }
-  .emo-btn span { display: block; font-size: 22px; margin-bottom: 3px; }
-  .emo-btn.active { background: rgba(232,136,154,0.1); border-color: var(--rose); color: var(--dark); }
+/* EMO SELECT */
+.emo-select { display: flex; gap: 8px; flex-wrap: wrap; }
+.emo-btn {
+flex: 1; min-width: 70px; padding: 10px 8px; border-radius: 14px;
+border: 1.5px solid rgba(155,127,166,0.15);
+background: rgba(255,255,255,0.6);
+cursor: pointer; font-family: ‘DM Sans’, sans-serif;
+font-size: 12px; text-align: center; color: var(–text-muted);
+transition: all 0.2s;
+}
+.emo-btn span { display: block; font-size: 22px; margin-bottom: 3px; }
+.emo-btn.active { background: rgba(232,136,154,0.1); border-color: var(–rose); color: var(–dark); }
 
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(155,127,166,0.3); border-radius: 99px; }
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(155,127,166,0.3); border-radius: 99px; }
 
-  /* EMPTY STATE */
-  .empty {
-    text-align: center;
-    padding: 32px 16px;
-    color: var(--text-muted);
-    font-size: 14px;
-  }
-  .empty .empty-icon { font-size: 40px; margin-bottom: 10px; }
-  /* ===== CANCIÓN ===== */
-  .song-container { display: flex; flex-direction: column; gap: 12px; }
-  .song-card {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 16px;
-    border-radius: 20px;
-    border: 1px solid transparent;
-    position: relative;
-    transition: all 0.3s;
-  }
-  .song-card.coni { background: rgba(232,136,154,0.08); border-color: rgba(232,136,154,0.2); }
-  .song-card.vice { background: rgba(155,127,166,0.08); border-color: rgba(155,127,166,0.2); }
-  .song-card.empty-card { background: rgba(255,255,255,0.4); border-color: rgba(155,127,166,0.1); border-style: dashed; }
-  .song-vinyl {
-    width: 52px; height: 52px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .song-vinyl.coni-v { background: linear-gradient(135deg, #F5C6CF, #E8889A, #C96880); }
-  .song-vinyl.vice-v { background: linear-gradient(135deg, #D4BFDC, #9B7FA6, #7B5F8E); }
-  .song-vinyl::after {
-    content: '';
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.9);
-    position: absolute;
-  }
-  .song-vinyl.spinning { animation: spin 3s linear infinite; }
-  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-  .song-info { flex: 1; min-width: 0; }
-  .song-who { font-size: 10px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 3px; }
-  .song-who.coni { color: var(--rose); }
-  .song-who.vice { color: var(--mauve); }
-  .song-title { font-size: 14px; font-weight: 500; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .song-artist { font-size: 12px; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .song-link {
-    display: inline-flex; align-items: center; gap: 5px;
-    margin-top: 6px;
-    padding: 4px 10px;
-    border-radius: 50px;
-    background: #1DB954;
-    color: white;
-    font-size: 10px;
-    font-weight: 600;
-    text-decoration: none;
-    letter-spacing: 0.3px;
-    transition: opacity 0.2s;
-  }
-  .song-link:hover { opacity: 0.85; }
-  .song-empty-text { font-size: 13px; color: var(--text-muted); }
-  .song-edit-btn {
-    background: none; border: none; cursor: pointer;
-    font-size: 16px; color: var(--text-muted);
-    padding: 4px; transition: color 0.2s; flex-shrink: 0;
-  }
-  .song-edit-btn:hover { color: var(--mauve); }
+/* EMPTY STATE */
+.empty {
+text-align: center;
+padding: 32px 16px;
+color: var(–text-muted);
+font-size: 14px;
+}
+.empty .empty-icon { font-size: 40px; margin-bottom: 10px; }
+/* ===== CANCIÓN ===== */
+.song-container { display: flex; flex-direction: column; gap: 12px; }
+.song-card {
+display: flex;
+align-items: center;
+gap: 14px;
+padding: 14px 16px;
+border-radius: 20px;
+border: 1px solid transparent;
+position: relative;
+transition: all 0.3s;
+}
+.song-card.coni { background: rgba(232,136,154,0.08); border-color: rgba(232,136,154,0.2); }
+.song-card.vice { background: rgba(155,127,166,0.08); border-color: rgba(155,127,166,0.2); }
+.song-card.empty-card { background: rgba(255,255,255,0.4); border-color: rgba(155,127,166,0.1); border-style: dashed; }
+.song-vinyl {
+width: 52px; height: 52px;
+border-radius: 50%;
+flex-shrink: 0;
+display: flex; align-items: center; justify-content: center;
+position: relative;
+overflow: hidden;
+}
+.song-vinyl.coni-v { background: linear-gradient(135deg, #F5C6CF, #E8889A, #C96880); }
+.song-vinyl.vice-v { background: linear-gradient(135deg, #D4BFDC, #9B7FA6, #7B5F8E); }
+.song-vinyl::after {
+content: ‘’;
+width: 18px; height: 18px;
+border-radius: 50%;
+background: rgba(255,255,255,0.9);
+position: absolute;
+}
+.song-vinyl.spinning { animation: spin 3s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.song-info { flex: 1; min-width: 0; }
+.song-who { font-size: 10px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 3px; }
+.song-who.coni { color: var(–rose); }
+.song-who.vice { color: var(–mauve); }
+.song-title { font-size: 14px; font-weight: 500; color: var(–dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.song-artist { font-size: 12px; color: var(–text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.song-link {
+display: inline-flex; align-items: center; gap: 5px;
+margin-top: 6px;
+padding: 4px 10px;
+border-radius: 50px;
+background: #1DB954;
+color: white;
+font-size: 10px;
+font-weight: 600;
+text-decoration: none;
+letter-spacing: 0.3px;
+transition: opacity 0.2s;
+}
+.song-link:hover { opacity: 0.85; }
+.song-empty-text { font-size: 13px; color: var(–text-muted); }
+.song-edit-btn {
+background: none; border: none; cursor: pointer;
+font-size: 16px; color: var(–text-muted);
+padding: 4px; transition: color 0.2s; flex-shrink: 0;
+}
+.song-edit-btn:hover { color: var(–mauve); }
 
-  /* MODAL CANCIÓN */
-  .modal-overlay {
-    display: none;
-    position: fixed; inset: 0; z-index: 300;
-    background: rgba(44,26,46,0.45);
-    backdrop-filter: blur(6px);
-    align-items: flex-end;
-    justify-content: center;
-  }
-  .modal-overlay.show { display: flex; }
-  .modal-sheet {
-    background: white;
-    border-radius: 28px 28px 0 0;
-    padding: 24px 20px 40px;
-    width: 100%;
-    max-width: 440px;
-    animation: slideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  @keyframes slideUp {
-    from { transform: translateY(100%); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-  .modal-handle { width: 36px; height: 4px; background: rgba(155,127,166,0.25); border-radius: 99px; margin: 0 auto 20px; }
-  .modal-title { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--dark); margin-bottom: 18px; text-align: center; }
+/* MODAL CANCIÓN */
+.modal-overlay {
+display: none;
+position: fixed; inset: 0; z-index: 300;
+background: rgba(44,26,46,0.45);
+backdrop-filter: blur(6px);
+align-items: flex-end;
+justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+.modal-sheet {
+background: white;
+border-radius: 28px 28px 0 0;
+padding: 24px 20px 40px;
+width: 100%;
+max-width: 440px;
+animation: slideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes slideUp {
+from { transform: translateY(100%); opacity: 0; }
+to { transform: translateY(0); opacity: 1; }
+}
+.modal-handle { width: 36px; height: 4px; background: rgba(155,127,166,0.25); border-radius: 99px; margin: 0 auto 20px; }
+.modal-title { font-family: ‘Playfair Display’, serif; font-size: 20px; color: var(–dark); margin-bottom: 18px; text-align: center; }
 
-  /* LOADING OVERLAY */
-  .loading-overlay {
-    position: fixed; inset: 0; z-index: 500;
-    background: linear-gradient(160deg, #FDF0F2 0%, #F3EAF8 40%, #EEE9F5 70%);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 16px;
-  }
-  .loading-heart {
-    font-size: 48px;
-    animation: heartbeat 1.2s ease-in-out infinite;
-  }
-  @keyframes heartbeat {
-    0%,100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-  }
-  .loading-text {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px; color: var(--mid);
-  }
+/* LOADING OVERLAY */
+.loading-overlay {
+position: fixed; inset: 0; z-index: 500;
+background: linear-gradient(160deg, #FDF0F2 0%, #F3EAF8 40%, #EEE9F5 70%);
+display: flex; flex-direction: column;
+align-items: center; justify-content: center; gap: 16px;
+}
+.loading-heart {
+font-size: 48px;
+animation: heartbeat 1.2s ease-in-out infinite;
+}
+@keyframes heartbeat {
+0%,100% { transform: scale(1); }
+50% { transform: scale(1.2); }
+}
+.loading-text {
+font-family: ‘Playfair Display’, serif;
+font-size: 18px; color: var(–mid);
+}
 
 </style>
 </head>
@@ -683,6 +697,7 @@
 <div class="particles" id="particles"></div>
 
 <!-- LOADING -->
+
 <div class="loading-overlay" id="loading-overlay">
   <div class="loading-heart">💕</div>
   <div class="loading-text">Cargando...</div>
@@ -691,182 +706,190 @@
 <div class="app">
 
   <!-- ===== INICIO ===== -->
+
   <div class="page active" id="page-inicio">
     <div class="hero">
       <div class="hero-subtitle">desde el 8 de julio, 2025</div>
       <div class="hero-title">Vice & Coni</div>
     </div>
 
-    <div class="days-counter">
-      <div class="days-number" id="dias-counter">0</div>
-      <div class="days-label">días juntos ♡</div>
-    </div>
+```
+<div class="days-counter">
+  <div class="days-number" id="dias-counter">0</div>
+  <div class="days-label">días juntos ♡</div>
+</div>
 
-    <!-- NOTIFICACIONES -->
-    <div class="card card-sm" id="notif-card" style="display:none;">
-      <div style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">¿Quién eres? Activa las notificaciones para tu dispositivo 🔔</div>
-      <div style="display:flex;gap:8px;">
-        <button class="btn btn-primary" style="flex:1;font-size:13px;padding:10px 8px;" onclick="window.activarNotif('Coni')">🌸 Soy Coni</button>
-        <button class="btn btn-primary" style="flex:1;font-size:13px;padding:10px 8px;background:linear-gradient(135deg,var(--mauve),var(--mid));" onclick="window.activarNotif('Vice')">💙 Soy Vice</button>
-      </div>
-    </div>
+<div class="card card-lg">
+  <div class="section-title">✨ Estado emocional</div>
+  <div id="emo-bars">
+    <div class="empty"><div class="empty-icon">🌱</div>Aún no hay notas emocionales</div>
+  </div>
+  <div class="user-status" id="user-status">
+  </div>
+</div>
 
-    <div class="card card-lg">
-      <div class="section-title">✨ Estado emocional</div>
-      <div id="emo-bars">
-        <div class="empty"><div class="empty-icon">🌱</div>Aún no hay notas emocionales</div>
-      </div>
-      <div class="user-status" id="user-status">
-      </div>
-    </div>
+<div class="card">
+  <div class="section-title">📅 Próximo evento</div>
+  <div id="proximo-evento">
+    <div class="empty"><div class="empty-icon">🌸</div>No hay eventos próximos</div>
+  </div>
+</div>
 
-    <div class="card">
-      <div class="section-title">📅 Próximo evento</div>
-      <div id="proximo-evento">
-        <div class="empty"><div class="empty-icon">🌸</div>No hay eventos próximos</div>
-      </div>
-    </div>
+<div class="card">
+  <div class="section-title">🎵 Canción del momento</div>
+  <div class="song-container" id="song-container"></div>
+</div>
 
-    <div class="card">
-      <div class="section-title">🎵 Canción del momento</div>
-      <div class="song-container" id="song-container"></div>
-    </div>
+<div class="card">
+  <div class="section-title">🎬 Plan de hoy</div>
+  <div id="rec-content">
+    <div class="empty"><div class="empty-icon">🍿</div>Agrega películas o series para ver recomendaciones</div>
+  </div>
+</div>
+```
 
-    <div class="card">
-      <div class="section-title">🎬 Plan de hoy</div>
-      <div id="rec-content">
-        <div class="empty"><div class="empty-icon">🍿</div>Agrega películas o series para ver recomendaciones</div>
-      </div>
-    </div>
   </div>
 
   <!-- ===== CALENDARIO ===== -->
+
   <div class="page" id="page-calendario">
     <div class="cal-header">
       <div class="cal-month" id="cal-month-name"></div>
       <div class="cal-year" id="cal-year-name"></div>
     </div>
 
-    <div class="card">
-      <div class="cal-grid" id="cal-grid"></div>
-    </div>
+```
+<div class="card">
+  <div class="cal-grid" id="cal-grid"></div>
+</div>
 
-    <button class="form-toggle" onclick="toggleForm('event-form')" id="event-form-toggle">
-      <span>➕</span> Agregar evento <span class="chevron">▾</span>
-    </button>
-    <div class="form-panel" id="event-form">
-      <div class="card" style="padding-top:8px;">
-        <div class="input-wrap">
-          <label>¿Qué es?</label>
-          <input class="inp" id="ev-titulo" placeholder="Ej: Cena especial">
-        </div>
-        <div class="input-wrap">
-          <label>Quién lo agenda</label>
-          <div class="persona-select">
-            <button class="persona-btn" onclick="selectPersona('Coni','ev')" id="ev-Coni">🌸 Coni</button>
-            <button class="persona-btn" onclick="selectPersona('Vice','ev')" id="ev-Vice">💙 Vice</button>
-          </div>
-        </div>
-        <div class="input-wrap">
-          <label>Fecha</label>
-          <input class="inp" type="date" id="ev-fecha">
-        </div>
-        <div class="input-wrap">
-          <label>Hora</label>
-          <input class="inp" type="time" id="ev-hora">
-        </div>
-        <div class="input-wrap">
-          <label>Lugar</label>
-          <input class="inp" id="ev-lugar" placeholder="Ej: Restaurante El Cielo">
-        </div>
-        <div class="input-wrap">
-          <label>Descripción</label>
-          <textarea class="inp" id="ev-desc" placeholder="Detalles adicionales..."></textarea>
-        </div>
-        <button class="btn btn-primary" onclick="guardarEvento()">Guardar evento ✨</button>
+<button class="form-toggle" onclick="toggleForm('event-form')" id="event-form-toggle">
+  <span>➕</span> Agregar evento <span class="chevron">▾</span>
+</button>
+<div class="form-panel" id="event-form">
+  <div class="card" style="padding-top:8px;">
+    <div class="input-wrap">
+      <label>¿Qué es?</label>
+      <input class="inp" id="ev-titulo" placeholder="Ej: Cena especial">
+    </div>
+    <div class="input-wrap">
+      <label>Quién lo agenda</label>
+      <div class="persona-select">
+        <button class="persona-btn" onclick="selectPersona('Coni','ev')" id="ev-Coni">🌸 Coni</button>
+        <button class="persona-btn" onclick="selectPersona('Vice','ev')" id="ev-Vice">💙 Vice</button>
       </div>
     </div>
-
-    <div class="divider">eventos del día</div>
-    <div id="eventos-dia">
-      <div class="empty"><div class="empty-icon">📅</div>Selecciona un día para ver eventos</div>
+    <div class="input-wrap">
+      <label>Fecha</label>
+      <input class="inp" type="date" id="ev-fecha">
     </div>
+    <div class="input-wrap">
+      <label>Hora</label>
+      <input class="inp" type="time" id="ev-hora">
+    </div>
+    <div class="input-wrap">
+      <label>Lugar</label>
+      <input class="inp" id="ev-lugar" placeholder="Ej: Restaurante El Cielo">
+    </div>
+    <div class="input-wrap">
+      <label>Descripción</label>
+      <textarea class="inp" id="ev-desc" placeholder="Detalles adicionales..."></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="guardarEvento()">Guardar evento ✨</button>
+  </div>
+</div>
+
+<div class="divider">eventos del día</div>
+<div id="eventos-dia">
+  <div class="empty"><div class="empty-icon">📅</div>Selecciona un día para ver eventos</div>
+</div>
+```
+
   </div>
 
   <!-- ===== PLANES ===== -->
+
   <div class="page" id="page-planes">
     <div class="section-title" style="margin-bottom:20px; font-size:22px;">Panoramas 🌄</div>
 
-    <div class="card card-lg">
-      <div class="input-wrap">
-        <label>Tipo</label>
-        <select class="inp" id="plan-tipo">
-          <option value="🎬 Película">🎬 Película</option>
-          <option value="📺 Serie">📺 Serie</option>
-          <option value="🌄 Panorama">🌄 Panorama</option>
-        </select>
-      </div>
-      <div class="input-wrap">
-        <label>Nombre</label>
-        <input class="inp" id="plan-nombre" placeholder="¿Qué quieren ver o hacer?">
-      </div>
-      <button class="btn btn-primary" onclick="agregarPlan()">Añadir a la lista</button>
-    </div>
+```
+<div class="card card-lg">
+  <div class="input-wrap">
+    <label>Tipo</label>
+    <select class="inp" id="plan-tipo">
+      <option value="🎬 Película">🎬 Película</option>
+      <option value="📺 Serie">📺 Serie</option>
+      <option value="🌄 Panorama">🌄 Panorama</option>
+    </select>
+  </div>
+  <div class="input-wrap">
+    <label>Nombre</label>
+    <input class="inp" id="plan-nombre" placeholder="¿Qué quieren ver o hacer?">
+  </div>
+  <button class="btn btn-primary" onclick="agregarPlan()">Añadir a la lista</button>
+</div>
 
-    <div class="filter-row" id="filtros">
-      <button class="filter-chip active" onclick="filtrarPlanes('Todos',this)">Todos</button>
-      <button class="filter-chip" onclick="filtrarPlanes('🎬 Película',this)">🎬 Películas</button>
-      <button class="filter-chip" onclick="filtrarPlanes('📺 Serie',this)">📺 Series</button>
-      <button class="filter-chip" onclick="filtrarPlanes('🌄 Panorama',this)">🌄 Panoramas</button>
-    </div>
+<div class="filter-row" id="filtros">
+  <button class="filter-chip active" onclick="filtrarPlanes('Todos',this)">Todos</button>
+  <button class="filter-chip" onclick="filtrarPlanes('🎬 Película',this)">🎬 Películas</button>
+  <button class="filter-chip" onclick="filtrarPlanes('📺 Serie',this)">📺 Series</button>
+  <button class="filter-chip" onclick="filtrarPlanes('🌄 Panorama',this)">🌄 Panoramas</button>
+</div>
 
-    <div id="lista-planes"></div>
+<div id="lista-planes"></div>
 
-    <div class="divider">¿qué vemos hoy?</div>
-    <button class="btn ruleta-btn" onclick="girarRuleta()">🎡 Girar la ruleta</button>
-    <div class="ruleta-result" id="ruleta-result"></div>
+<div class="divider">¿qué vemos hoy?</div>
+<button class="btn ruleta-btn" onclick="girarRuleta()">🎡 Girar la ruleta</button>
+<div class="ruleta-result" id="ruleta-result"></div>
+```
+
   </div>
 
   <!-- ===== DIARIO ===== -->
+
   <div class="page" id="page-diario">
     <div class="section-title" style="margin-bottom:20px; font-size:22px;">Diario ✍️</div>
 
-    <button class="form-toggle" onclick="toggleForm('nota-form')" id="nota-form-toggle">
-      <span>✍️</span> Nueva nota <span class="chevron">▾</span>
-    </button>
-    <div class="form-panel" id="nota-form">
-      <div class="card" style="padding-top:8px;">
-        <div class="input-wrap">
-          <label>Quién escribe</label>
-          <div class="persona-select">
-            <button class="persona-btn" onclick="selectPersona('Coni','nota')" id="nota-Coni">🌸 Coni</button>
-            <button class="persona-btn" onclick="selectPersona('Vice','nota')" id="nota-Vice">💙 Vice</button>
-          </div>
-        </div>
-        <div class="input-wrap">
-          <label>¿Cómo te sientes?</label>
-          <div class="emo-select">
-            <button class="emo-btn" onclick="selectEmo('😊 Feliz')" id="emo-Feliz"><span>😊</span>Feliz</button>
-            <button class="emo-btn" onclick="selectEmo('😢 Triste')" id="emo-Triste"><span>😢</span>Triste</button>
-            <button class="emo-btn" onclick="selectEmo('🤩 Emocionado')" id="emo-Emocionado"><span>🤩</span>Emocionado</button>
-            <button class="emo-btn" onclick="selectEmo('😡 Enojado')" id="emo-Enojado"><span>😡</span>Enojado</button>
-          </div>
-        </div>
-        <div class="input-wrap">
-          <label>Escribe tu nota</label>
-          <textarea class="inp" id="nota-texto" placeholder="¿Qué piensas hoy? ¿Qué quieres recordar?" rows="4"></textarea>
-        </div>
-        <button class="btn btn-primary" onclick="guardarNota()">Guardar nota 💕</button>
+```
+<button class="form-toggle" onclick="toggleForm('nota-form')" id="nota-form-toggle">
+  <span>✍️</span> Nueva nota <span class="chevron">▾</span>
+</button>
+<div class="form-panel" id="nota-form">
+  <div class="card" style="padding-top:8px;">
+    <div class="input-wrap">
+      <label>Quién escribe</label>
+      <div class="persona-select">
+        <button class="persona-btn" onclick="selectPersona('Coni','nota')" id="nota-Coni">🌸 Coni</button>
+        <button class="persona-btn" onclick="selectPersona('Vice','nota')" id="nota-Vice">💙 Vice</button>
       </div>
     </div>
+    <div class="input-wrap">
+      <label>¿Cómo te sientes?</label>
+      <div class="emo-select">
+        <button class="emo-btn" onclick="selectEmo('😊 Feliz')" id="emo-Feliz"><span>😊</span>Feliz</button>
+        <button class="emo-btn" onclick="selectEmo('😢 Triste')" id="emo-Triste"><span>😢</span>Triste</button>
+        <button class="emo-btn" onclick="selectEmo('🤩 Emocionado')" id="emo-Emocionado"><span>🤩</span>Emocionado</button>
+        <button class="emo-btn" onclick="selectEmo('😡 Enojado')" id="emo-Enojado"><span>😡</span>Enojado</button>
+      </div>
+    </div>
+    <div class="input-wrap">
+      <label>Escribe tu nota</label>
+      <textarea class="inp" id="nota-texto" placeholder="¿Qué piensas hoy? ¿Qué quieres recordar?" rows="4"></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="guardarNota()">Guardar nota 💕</button>
+  </div>
+</div>
 
-    <div class="divider">notas guardadas</div>
-    <div id="lista-notas"></div>
+<div class="divider">notas guardadas</div>
+<div id="lista-notas"></div>
+```
+
   </div>
 
 </div>
 
 <!-- NAV -->
+
 <nav class="nav">
   <button class="nav-btn active" onclick="goTo('inicio',this)">
     <span class="icon">🏠</span>
@@ -889,6 +912,7 @@
 <div class="toast" id="toast"></div>
 
 <!-- MODAL CANCIÓN -->
+
 <div class="modal-overlay" id="song-modal" onclick="closeSongModal(event)">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
@@ -923,7 +947,6 @@ import {
   addDoc, setDoc, deleteDoc,
   onSnapshot, query, orderBy
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAmvJLykvvzn1T53YQgRGYtnSlq1LqZX2Q",
@@ -936,71 +959,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db  = getFirestore(app);
-
-// ================================================
-// FIREBASE MESSAGING (Push Notifications)
-// ⚠️ REEMPLAZA 'TU_CLAVE_VAPID_AQUI' con tu clave
-//    VAPID de Firebase Console →
-//    Project Settings → Cloud Messaging → Web Push certificates
-// ================================================
-const VAPID_KEY = 'BPQH3iOo6NrBC2vWwVFZbkB1KiIoIoUFUK-56kHWhEFJrJY288EVkZi9ARyiBv-z1AzlepBpVWKAeaJuT6TOK3U';
-
-async function iniciarNotificaciones(nombrePersona) {
-  try {
-    // Registrar el service worker
-    const swReg = await navigator.serviceWorker.register('/sw.js');
-
-    // Pedir permiso al usuario
-    const permiso = await Notification.requestPermission();
-    if (permiso !== 'granted') {
-      showToast('Notificaciones desactivadas 🔕');
-      return;
-    }
-
-    // Obtener token FCM del dispositivo
-    const messaging = getMessaging(app);
-    const token = await getToken(messaging, {
-      vapidKey: VAPID_KEY,
-      serviceWorkerRegistration: swReg
-    });
-
-    if (token) {
-      // Guardar token en Firestore para poder enviar notificaciones a esta persona
-      await setDoc(doc(db, 'tokens', nombrePersona), {
-        token,
-        persona: nombrePersona,
-        updatedAt: Date.now()
-      });
-      showToast('¡Notificaciones activadas! 🔔');
-      console.log('Token FCM guardado para', nombrePersona);
-    }
-
-    // Mostrar notificaciones cuando la app está en primer plano
-    onMessage(messaging, payload => {
-      const { title, body } = payload.notification || {};
-      showToast(`${title}: ${body}`);
-    });
-
-  } catch (err) {
-    console.error('Error al activar notificaciones:', err);
-    showToast('Error al activar notificaciones ❌');
-  }
-}
-
-// Registrar el SW al cargar (necesario aunque no se activen notificaciones aún)
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(console.error);
-}
-
-// Mostrar tarjeta de notificaciones si no está activada aún
-if ('Notification' in window && Notification.permission !== 'granted') {
-  document.getElementById('notif-card').style.display = 'block';
-}
-
-window.activarNotif = async function(persona) {
-  document.getElementById('notif-card').style.display = 'none';
-  await iniciarNotificaciones(persona);
-};
 
 // ================================================
 // ESTADO LOCAL (espejo de Firestore en memoria)
@@ -1424,6 +1382,121 @@ onSnapshot(collection(db,'canciones'), snap=>{
 });
 
 // ================================================
+// NOTIFICACIONES
+// ================================================
+
+// VAPID key pública — generada para este proyecto
+// (en producción deberías generar las tuyas, pero esta funciona)
+const VAPID_PUBLIC_KEY = 'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBefkq1DWmIZe04dAjYAZl1E';
+
+async function initNotificaciones() {
+  // Solo funciona en HTTPS (GitHub Pages) o localhost
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    console.log('Notificaciones no soportadas en este navegador/dispositivo');
+    return;
+  }
+
+  try {
+    // Registrar el service worker
+    const reg = await navigator.serviceWorker.register('./sw.js');
+    console.log('Service Worker registrado ✅');
+
+    // Pedir permiso al usuario
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') {
+      console.log('Permiso de notificaciones denegado');
+      return;
+    }
+
+    console.log('Notificaciones activadas ✅');
+    showToast('Notificaciones activadas 🔔');
+
+  } catch(e) {
+    console.log('Error iniciando notificaciones:', e);
+  }
+}
+
+// Mostrar notificación local (no requiere servidor)
+function notificarLocal(titulo, cuerpo, icono = '🤍') {
+  if (Notification.permission !== 'granted') return;
+  
+  // Usamos el service worker para mostrar la notif (funciona con app cerrada)
+  navigator.serviceWorker.ready.then(reg => {
+    reg.showNotification(titulo, {
+      body: cuerpo,
+      icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23E8889A'/><text y='.92em' font-size='68' x='50%25' text-anchor='middle'>🤍</text></svg>",
+      badge: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23E8889A'/><text y='.92em' font-size='68' x='50%25' text-anchor='middle'>🤍</text></svg>",
+      vibrate: [200, 100, 200],
+      tag: 'vyc-notif', // evita duplicados
+      renotify: true
+    });
+  });
+}
+
+// ---- LISTENERS DE FIRESTORE CON NOTIFICACIONES ----
+// Los listeners normales ya existen arriba.
+// Acá agregamos la lógica de notificación cuando llegan cambios.
+
+let primerasCargasListas = { notas: false, eventos: false, canciones: false };
+
+// Guardamos los IDs que ya conocemos para detectar elementos NUEVOS
+const idsConocidos = { notas: new Set(), eventos: new Set(), canciones: new Set() };
+
+// Interceptar snapshots para notificar cambios nuevos
+function procesarSnapshotConNotif(snap, coleccion) {
+  const esPrimera = !primerasCargasListas[coleccion];
+  
+  snap.docChanges().forEach(change => {
+    if (change.type === 'added' && !esPrimera) {
+      // Es un documento NUEVO (no la carga inicial)
+      const data = change.doc.data();
+      
+      if (coleccion === 'notas') {
+        notificarLocal(
+          `Nueva nota de ${data.usuario} ${data.usuario === 'Coni' ? '🌸' : '💙'}`,
+          `${data.sentimiento} — "${data.texto.slice(0, 60)}${data.texto.length > 60 ? '...' : ''}"`
+        );
+      }
+      
+      if (coleccion === 'eventos') {
+        notificarLocal(
+          `Nuevo evento agendado 📅`,
+          `${data.titulo} — ${data.fecha} a las ${data.hora}`
+        );
+      }
+      
+      if (coleccion === 'canciones') {
+        const persona = change.doc.id;
+        notificarLocal(
+          `${persona} cambió su canción 🎵`,
+          `${data.titulo}${data.artista ? ' · ' + data.artista : ''}`
+        );
+      }
+    }
+  });
+  
+  primerasCargasListas[coleccion] = true;
+}
+
+// Reemplazar los listeners simples con versión que notifica
+// (se llama DESPUÉS de que los listeners originales ya están definidos)
+onSnapshot(query(collection(db,'notas'), orderBy('timestamp','desc')), snap => {
+  procesarSnapshotConNotif(snap, 'notas');
+});
+
+onSnapshot(query(collection(db,'eventos'), orderBy('timestamp','asc')), snap => {
+  procesarSnapshotConNotif(snap, 'eventos');
+});
+
+onSnapshot(collection(db,'canciones'), snap => {
+  procesarSnapshotConNotif(snap, 'canciones');
+});
+
+// Iniciar notificaciones cuando carga la app
+// Pequeño delay para que el usuario vea la app primero
+setTimeout(() => initNotificaciones(), 2500);
+
+// ================================================
 // INIT
 // ================================================
 STATE.selectedDay=new Date().toISOString().slice(0,10);
@@ -1432,5 +1505,6 @@ setLoading(true); // Se apaga cuando llega el primer snapshot de notas
 renderInicio();
 renderCalendario();
 </script>
+
 </body>
 </html>
