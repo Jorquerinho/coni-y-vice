@@ -116,15 +116,15 @@ async function sendFCM(accessToken, token, title, body, url) {
   const payload = {
     message: {
       token,
-      notification: { title, body: body || "" },
+      // Solo "data", sin "notification", para evitar notificación duplicada.
+      // El sw.js se encarga de mostrarla via onBackgroundMessage.
+      data: {
+        title,
+        body: body || "",
+        url: url || "/"
+      },
       webpush: {
-        notification: {
-          title,
-          body: body || "",
-          icon: "/icon.png",
-          badge: "/icon.png",
-          vibrate: [200, 100, 200]
-        },
+        headers: { Urgency: "high" },
         fcm_options: { link: url || "/" }
       }
     }
