@@ -975,10 +975,40 @@ async function enviarNotificacion(titulo, mensaje) {
   }
 }
 
+// Detectar base path para GitHub Pages (ej: /nombre-repo/) o raíz
+// Ruta correcta para GitHub Pages (jorquerinho.github.io/coni-y-vice/)
+const SW_PATH = '/coni-y-vice/sw.js';
+const SW_SCOPE = '/coni-y-vice/';
+
+// Instancia global de messaging (para no inicializar dos veces)
+let _messaging = null;
+function getOrInitMessaging() {
+  if (!_messaging) _messaging = getMessaging(app);
+  return _messaging;
+}
+
 async function iniciarNotificaciones(nombrePersona) {
   try {
-    // Registrar el service worker
-    const swReg = await navigator.serviceWorker.register('/sw.js');
+    if (!('serviceWorker' in navigator)) {
+      showToast('Tu navegador no soporta notificaciones 😔');
+      return;
+    }
+
+    // Registrar el SW con ruta correcta (funciona en GitHub Pages)
+    const swReg = await navigator.serviceWorker.register(SW_PATH, { scope: SW_SCOPE });
+
+    // Esperar a que el SW esté activo
+    await new Promise(resolve => {
+      if (swReg.active) { resolve(); return; }
+      const worker = swReg.installing || swReg.waiting;
+      if (worker) {
+        worker.addEventListener('statechange', () => {
+          if (worker.state === 'activated') resolve();
+        });
+      } else {
+        navigator.serviceWorker.ready.then(resolve);
+      }
+    });
 
     // Pedir permiso al usuario
     const permiso = await Notification.requestPermission();
@@ -988,14 +1018,14 @@ async function iniciarNotificaciones(nombrePersona) {
     }
 
     // Obtener token FCM del dispositivo
-    const messaging = getMessaging(app);
+    const messaging = getOrInitMessaging();
+    const swReady = await navigator.serviceWorker.ready;
     const token = await getToken(messaging, {
       vapidKey: VAPID_KEY,
-      serviceWorkerRegistration: swReg
+      serviceWorkerRegistration: swReady
     });
 
     if (token) {
-      // Guardar token en Firestore para poder enviar notificaciones a esta persona
       await setDoc(doc(db, 'tokens', nombrePersona), {
         token,
         persona: nombrePersona,
@@ -1003,6 +1033,8 @@ async function iniciarNotificaciones(nombrePersona) {
       });
       showToast('¡Notificaciones activadas! 🔔');
       console.log('Token FCM guardado para', nombrePersona);
+    } else {
+      showToast('No se pudo obtener token 😔');
     }
 
     // Mostrar notificaciones cuando la app está en primer plano
@@ -1017,9 +1049,11 @@ async function iniciarNotificaciones(nombrePersona) {
   }
 }
 
-// Registrar el SW al cargar (necesario aunque no se activen notificaciones aún)
+// Registrar el SW al cargar
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(console.error);
+  navigator.serviceWorker.register(SW_PATH, {
+    scope: SW_SCOPE
+  }).catch(e => console.warn('SW register failed:', e));
 }
 
 // Mostrar tarjeta de notificaciones si no está activada aún
