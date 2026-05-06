@@ -919,7 +919,7 @@
 // ================================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
-  getFirestore, collection, doc,
+  getFirestore, collection, doc, getDoc,
   addDoc, setDoc, deleteDoc,
   onSnapshot, query, orderBy
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -944,6 +944,36 @@ const db  = getFirestore(app);
 //    Project Settings → Cloud Messaging → Web Push certificates
 // ================================================
 const VAPID_KEY = 'BPQH3iOo6NrBC2vWwVFZbkB1KiIoIoUFUK-56kHWhEFJrJY288EVkZi9ARyiBv-z1AzlepBpVWKAeaJuT6TOK3U';
+
+// ================================================
+// URL DEL CLOUDFLARE WORKER
+// ⚠️ Reemplaza esto con tu URL real después de deployar
+// ================================================
+const WORKER_URL = 'https://vyc-notificaciones.g-jorquera-vicente.workers.dev/';
+
+// Envía notificación al otro dispositivo
+async function enviarNotificacion(titulo, mensaje) {
+  try {
+    // Obtener el token del OTRO usuario desde Firestore
+    const yo = localStorage.getItem('vyc_persona'); // 'Vice' o 'Coni'
+    if (!yo) return; // Si no eligió persona todavía, no hacer nada
+    const otro = yo === 'Vice' ? 'Coni' : 'Vice';
+
+    const tokenDoc = await getDoc(doc(db, 'tokens', otro));
+
+    if (!tokenDoc.exists()) return; // El otro no tiene notificaciones activadas
+    const token = tokenDoc.data().token;
+
+    await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, title: titulo, message: mensaje, url: '/' })
+    });
+  } catch (err) {
+    console.warn('No se pudo enviar notificación:', err);
+    // No mostramos error al usuario, las notificaciones son secundarias
+  }
+}
 
 async function iniciarNotificaciones(nombrePersona) {
   try {
@@ -998,6 +1028,7 @@ if ('Notification' in window && Notification.permission !== 'granted') {
 }
 
 window.activarNotif = async function(persona) {
+  localStorage.setItem('vyc_persona', persona);
   document.getElementById('notif-card').style.display = 'none';
   await iniciarNotificaciones(persona);
 };
@@ -1212,6 +1243,10 @@ window.guardarEvento = async function(){
     document.getElementById('ev-lugar').value='';
     document.getElementById('ev-desc').value='';
     showToast('Evento guardado 🎉');
+    enviarNotificacion(
+      `Nuevo evento agendado 📅`,
+      `${titulo}${lugar ? ' en ' + lugar : ''} — ${fecha||'hoy'} ${hora}`
+    );
   } catch(e){ showToast('Error al guardar ❌'); console.error(e); }
 };
 
@@ -1247,6 +1282,7 @@ window.agregarPlan = async function(){
     await addDoc(collection(db,'panoramas'),{tipo,nombre,fecha:new Date().toISOString().slice(0,10),timestamp:Date.now()});
     document.getElementById('plan-nombre').value='';
     showToast('Añadido a la lista 🌟');
+    enviarNotificacion('¡Nuevo panorama agregado! 🌟', `${tipo} ${nombre}`);
   } catch(e){ showToast('Error al guardar ❌'); }
 };
 
@@ -1289,6 +1325,10 @@ window.guardarNota = async function(){
     });
     document.getElementById('nota-texto').value='';
     showToast('Nota guardada 💕');
+    enviarNotificacion(
+      `Nueva nota de ${STATE.notaPersona} ${STATE.notaPersona==='Coni'?'🌸':'💙'}`,
+      texto.length > 60 ? texto.slice(0, 60) + '…' : texto
+    );
   } catch(e){ showToast('Error al guardar ❌'); }
 };
 
